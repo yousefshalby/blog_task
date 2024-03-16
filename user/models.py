@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
-from mongoengine import Document, EmailField, StringField, BooleanField, DateField
 
 from project.custom_Models import CustomModel
 
@@ -11,25 +10,13 @@ class CustomUserManager(UserManager):
         return super().create_superuser(username, email, password, **extra_fields)
 
 
-# class User(AbstractUser, Document):
-#     email = EmailField(verbose_name="email address", unique=True, null=True)
-#     username = StringField(max_length=150, null=True, blank=True)
-#     is_active = BooleanField(default=False)
-#     is_app_user = BooleanField(default=False)
-#     created_at = DateField(null=True, blank=True)
-
-
-#     EMAIL_FIELD = "email"
-#     USERNAME_FIELD = "email"
-#     REQUIRED_FIELDS = ["username"]
-    
 
 class User(CustomModel, AbstractUser):
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128)
     is_active = models.BooleanField(default=True)
-    created_at = DateField(null=True, blank=True)
+    created_at = models.DateField(null=True, blank=True)
     
     
     objects = CustomUserManager()

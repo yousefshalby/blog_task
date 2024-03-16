@@ -31,7 +31,6 @@ class UserView(GenericAPIView):
         user = serializer.instance
         user.is_app_user = True
         user.save()
-        serializer.instance.send_otp()
         refersh_token = RefreshToken.for_user(user)
         access_token = refersh_token.access_token
         token_serializer = TokenSerializer(

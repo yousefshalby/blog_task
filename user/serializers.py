@@ -9,7 +9,6 @@ from project.services import CustomModelSerializer
 class TokenSerializer(serializers.Serializer):
     access_token = serializers.CharField(max_length=200)
     refresh_token = serializers.CharField(max_length=200)
-    user_type = serializers.CharField(read_only=True)
 
 
 class CustomAuthTokenSerializer(serializers.Serializer):
@@ -27,10 +26,8 @@ class CustomAuthTokenSerializer(serializers.Serializer):
 
     def _login_by_login_email(self, email, password):
         user = User.objects.filter(email=email).first()
-
         if user is None:
             self._raise_login_validation_error()
-
         if user and not user.check_password(password):
             self._raise_login_validation_error()
 
@@ -52,8 +49,13 @@ class UserSerializer(CustomModelSerializer):
             "email",
             "first_name",
             "last_name",
+            "username"
         )
 
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+    
     def validate(self, validated_data):
         if self.context["request"].method == "POST":
             if "email" not in validated_data:
@@ -64,15 +66,4 @@ class UserSerializer(CustomModelSerializer):
             ).exists():
                 raise serializers.ValidationError(_("Email already exist"))
 
-        elif self.context["request"].method == "PUT":
-            if (
-                "email" in validated_data
-                and User.objects.filter(
-                    email=validated_data["email"], is_active=True
-                ).exists()
-            ):
-                raise serializers.ValidationError(_("Email already exist"))
-
-            if "password" in validated_data:
-                raise serializers.ValidationError(_("can not update password."))
         return validated_data

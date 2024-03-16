@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     "django_filters",
     # all auth
     "dj_rest_auth",
-    "drf_yasg",
     "user",
     "post"
 ]
@@ -79,9 +78,8 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'mydatabase',  # Replace 'mydatabase' with your MongoDB database name
-        'ENFORCE_SCHEMA': False,  # Set to False to allow schema-less behavior
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -155,15 +153,3 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "user_id",
 }
 
-""" SWAGGER_SETTINGS """
-SWAGGER_SETTINGS = {
-    "DEFAULT_AUTO_SCHEMA_CLASS": "project.swagger.CustomSwaggerAutoSchema",
-    "LOGIN_URL": "/admin/login/",
-    "LOGOUT_URL": "/admin/logout/",
-    "PERSIST_AUTH": True,
-    "DEEP_LINKING": True,
-    "DOC_EXPANSION": "none",
-    "SECURITY_DEFINITIONS": {
-        "JWT": {"type": "apiKey", "name": "Authorization", "in": "header"},
-    },
-}

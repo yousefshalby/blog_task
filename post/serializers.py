@@ -10,7 +10,7 @@ class PostsListSerializer(serializers.ModelSerializer):
 
 
 class CreatePostSerializer(serializers.ModelSerializer):
-    user = HiddenField(default=CurrentUserDefault())
+    author = HiddenField(default=CurrentUserDefault())
 
     class Meta:
         model = Post
